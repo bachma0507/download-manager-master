@@ -58,6 +58,9 @@
     
     
     [self retrieveData];
+    
+    self.downloadManager = [[DownloadManager alloc] initWithDelegate:self];
+    self.downloadManager.maxConcurrentDownloads = 4;
 }
 
 -(void)retrieveData
@@ -268,6 +271,8 @@
             break;
         }
     }
+    
+    
 }
 
 #pragma mark - Table View delegate and data source methods
@@ -399,7 +404,6 @@
     if ([cell.downloadButton.currentTitle isEqualToString:@"Download"]) {
         
     
-    
     NSString *documentsPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
     NSString *downloadFolder = [documentsPath stringByAppendingPathComponent:@"downloads"];
     
@@ -411,8 +415,8 @@
     
    // NSLog(@"Issue URL is:%@", myURL);
     
-    self.downloadManager = [[DownloadManager alloc] initWithDelegate:self];
-    self.downloadManager.maxConcurrentDownloads = 4;
+    //self.downloadManager = [[DownloadManager alloc] initWithDelegate:self];
+    //self.downloadManager.maxConcurrentDownloads = 4;
     
     NSString *downloadFilename = [downloadFolder stringByAppendingPathComponent:[myURL lastPathComponent]];
     NSURL *url = [NSURL URLWithString:myURL];
@@ -425,6 +429,8 @@
     self.startDate = [NSDate date];
     
     [self.downloadManager start];
+        
+    
     }
     else if ([cell.downloadButton.currentTitle isEqualToString:@"Read"]){
 //        NSString *message = @"Testing Read tap";
