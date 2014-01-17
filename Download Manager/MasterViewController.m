@@ -28,8 +28,11 @@
 #import "DownloadManager.h"
 #import "DownloadCell.h"
 #import "jits.h"
+#import "AppDelegate.h"
+#import "ReaderViewController.h"
 
-@interface MasterViewController () <DownloadManagerDelegate>
+
+@interface MasterViewController () <DownloadManagerDelegate, ReaderViewControllerDelegate>
 
 
 
@@ -42,6 +45,12 @@
 
 @implementation MasterViewController
 @synthesize json, jitsArray;
+
+#pragma mark Constants
+
+#define DEMO_VIEW_CONTROLLER_PUSH FALSE
+
+#pragma mark UIViewController methods
 
 - (void)viewDidLoad
 {
@@ -385,6 +394,12 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     //[self queueAndStartDownloads];
     
+    DownloadCell *cell = (DownloadCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+    
+    if ([cell.downloadButton.currentTitle isEqualToString:@"Download"]) {
+        
+    
+    
     NSString *documentsPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
     NSString *downloadFolder = [documentsPath stringByAppendingPathComponent:@"downloads"];
     
@@ -410,9 +425,75 @@
     self.startDate = [NSDate date];
     
     [self.downloadManager start];
-    
-    
     }
+    else if ([cell.downloadButton.currentTitle isEqualToString:@"Read"]){
+//        NSString *message = @"Testing Read tap";
+//        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"Testing"
+//                                                           message:message
+//                                                          delegate:self
+//                                                 cancelButtonTitle:@"Ok"
+//                                                 otherButtonTitles:nil,nil];
+//        [alertView show];
+        
+        jits * jitsInstance = nil;
+        
+        jitsInstance = [jitsArray objectAtIndex:indexPath.row];
+        
+        NSString * myURL = [NSString stringWithFormat:@"%@", jitsInstance.url];
+        
+        NSString* documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+        NSString *downloadFolder = [documentsPath stringByAppendingPathComponent:@"downloads"];
+        
+        NSString * fileName = [[NSString alloc]initWithFormat:@"%@", [myURL lastPathComponent]];
+        
+        NSString* foofile = [downloadFolder stringByAppendingPathComponent:fileName];
+        //BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:foofile];
+        
+        NSString *phrase = nil; // Document password (for unlocking most encrypted PDF files)
+        
+        ReaderDocument *document = [ReaderDocument withDocumentFilePath:foofile password:phrase];
+        
+        if (document != nil) // Must have a valid ReaderDocument object in order to proceed with things
+        {
+            ReaderViewController *readerViewController = [[ReaderViewController alloc] initWithReaderDocument:document];
+            
+            readerViewController.delegate = self; // Set the ReaderViewController delegate to self
+            
+            
+#if (DEMO_VIEW_CONTROLLER_PUSH == TRUE)
+            
+            [self.navigationController pushViewController:readerViewController animated:YES];
+            
+#else // present in a modal view controller
+            
+            readerViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            readerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
+            
+            [self presentViewController:readerViewController animated:YES completion:NULL];
+            
+#endif // DEMO_VIEW_CONTROLLER_PUSH
+        }
+
+
+    }
+    
+}
+
+#pragma mark ReaderViewControllerDelegate methods
+
+- (void)dismissReaderViewController:(ReaderViewController *)viewController
+{
+#if (DEMO_VIEW_CONTROLLER_PUSH == TRUE)
+    
+	[self.navigationController popViewControllerAnimated:YES];
+    
+#else // dismiss the modal view controller
+    
+	[self dismissViewControllerAnimated:YES completion:NULL];
+    
+#endif // DEMO_VIEW_CONTROLLER_PUSH
+}
+
 
 #pragma mark - Table view utility methods
 
