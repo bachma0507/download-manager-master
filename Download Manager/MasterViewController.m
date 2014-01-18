@@ -263,15 +263,31 @@
 
 - (void)downloadManager:(DownloadManager *)downloadManager downloadDidReceiveData:(Download *)download;
 {
+    //for (NSInteger row = [downloadManager.downloads objectAtIndex:0]; row < [downloadManager.downloads count]; row++)
+    //{
+        //if (download == [downloadManager.downloads objectAtIndex:0])
+        //{
+            //[self updateProgressViewForIndexPath:[NSIndexPath indexPathForRow:[downloadManager.downloads objectAtIndex:0] inSection:0] download:download];
+            //break;
+        //}
+        
+        //[downloadManager.downloads removeObjectAtIndex:0];
+    //}
+////////////////////////////////////////
+    
     for (NSInteger row = 0; row < [downloadManager.downloads count]; row++)
+        
     {
         if (download == downloadManager.downloads[row])
-        {
+            {
             [self updateProgressViewForIndexPath:[NSIndexPath indexPathForRow:row inSection:0] download:download];
+                
+            }
+        
             break;
+        
         }
-    }
-    
+
     
 }
 
