@@ -28,16 +28,15 @@
 @interface MasterViewController : UITableViewController
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
-//@property (strong, nonatomic) IBOutlet UIButton *downloadButton;
+
 
 @property (nonatomic, strong) NSMutableArray * json;
 @property (nonatomic, strong) NSMutableArray * jitsArray;
+@property (strong, nonatomic) IBOutlet UIProgressView *progressView;
 
-//- (IBAction)tappedCancelButton:(id)sender;
-//- (IBAction)downloadButtonTapped:(id)sender;
+
 
 -(void) retrieveData;
--(void) queueAndStartDownloads;
 
 
 @end

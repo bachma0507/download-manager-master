@@ -44,7 +44,7 @@
 @end
 
 @implementation MasterViewController
-@synthesize json, jitsArray;
+@synthesize json, jitsArray, progressView;
 
 #pragma mark Constants
 
@@ -61,25 +61,25 @@
     
     self.downloadManager = [[DownloadManager alloc] initWithDelegate:self];
     self.downloadManager.maxConcurrentDownloads = 4;
+    
+    self.cancelButton.enabled = NO;
+    [progressView setHidden:YES];
 }
 
 -(void)retrieveData
 {
-    //NSLog(@"retrieveData called!");
-    //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),^{
     
     NSURL *url = [NSURL URLWithString:@"http://speedyreference.com/jits.php"];
     NSData * data = [NSData dataWithContentsOfURL:url];
     
-    //dispatch_async(dispatch_get_main_queue(), ^{
     
     json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
     
-    //Set up our exhibitors array
+    //Set up array
     jitsArray = [[NSMutableArray alloc] init];
     
     for (int i = 0; i < json.count; i++) {
-        //create exhibitors object
+        //create object
         NSString * jID = [[json objectAtIndex:i] objectForKey:@"ID"];
         NSString * jCoverImage = [[json objectAtIndex:i] objectForKey:@"COVERIMAGE"];
         NSString * jURL = [[json objectAtIndex:i] objectForKey:@"URL"];
@@ -89,99 +89,46 @@
         jits * myJits = [[jits alloc] initWithjitsID: jID andCoverImage:jCoverImage andURL:jURL andIssue:jIssue];
         
         
-        //Add our exhibitors object to our exhibitorsArray
+        //Add object to Array
         [jitsArray addObject:myJits];
-        //NSLog(@"jitsArray count is: %lu", (unsigned long)jitsArray.count);
-    }
-    
-        //jits * jitsInstance = nil;
-        
-        //jitsInstance = [jitsArray objectAtIndex:0];
-        
-        //NSString *myStr = [[NSString alloc] initWithFormat:@"%@", jitsInstance.issue ];
-        
-        //NSLog(@"Issue text from RetrieveData: %@", myStr);
-        //NSLog(@"URL from RetrieveData: %@", jitsInstance.url);
-    
-    
-    
-    
-    //});
-    //});
+        }
     
     [self.tableView reloadData];
 }
 
 
-- (void)queueAndStartDownloads
-{
-    
-    NSString *documentsPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
-    NSString *downloadFolder = [documentsPath stringByAppendingPathComponent:@"downloads"];
-    
-//    NSURL *downloadURL = [NSURL URLWithString:@"http://speedyreference.com/jits.php"];
-//    NSData * data = [NSData dataWithContentsOfURL:downloadURL];
-    
-//    json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+//- (void)queueAndStartDownloads
+//{
 //    
-//    //Set up our exhibitors array
-//    jitsArray = [[NSMutableArray alloc] init];
+//    NSString *documentsPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+//    NSString *downloadFolder = [documentsPath stringByAppendingPathComponent:@"downloads"];
 //    
-//    for (int i = 0; i < json.count; i++) {
-//        //create exhibitors object
-//        NSString * jID = [[json objectAtIndex:i] objectForKey:@"ID"];
-//        NSString * jCoverImage = [[json objectAtIndex:i] objectForKey:@"COVERIMAGE"];
-//        NSString * jURL = [[json objectAtIndex:i] objectForKey:@"URL"];
-//        NSString * jIssue = [[json objectAtIndex:i] objectForKey:@"ISSUE"];
-//        
-//        
-//        jits * myJits = [[jits alloc] initWithjitsID: jID andCoverImage:jCoverImage andURL:jURL andIssue:jIssue];
-//        
-//        
-//        //Add our exhibitors object to our exhibitorsArray
-//        [jitsArray addObject:myJits];
+//    jits * jitsInstance = nil;
 //    
-////#warning replace URLs with the names of the files and the URL you want to download them from
-//
-//    // an array of files to be downloaded
+//    jitsInstance = [jitsArray objectAtIndex:0];
 //    
-//    }
-    
-    jits * jitsInstance = nil;
-    
-    jitsInstance = [jitsArray objectAtIndex:0];
-    
-    NSString * myURL = [NSString stringWithFormat:@"%@", jitsInstance.url];
-    
-    NSLog(@"Issue URL is:%@", myURL);
-    
-//    NSArray *urlStrings = @[@"http://speedyreference.com/bicsi/newsstand/jits/JournalITS.pdf",
-//                            @"http://speedyreference.com/bicsi/newsstand/jits/JITS.pdf"/*,
-//                            @"http://www.yourwebsitehere.com/test/file3.pdf",
-//                            @"http://www.yourwebsitehere.com/test/file4.pdf"*/];
-    
-    // create download manager instance
-    
-    self.downloadManager = [[DownloadManager alloc] initWithDelegate:self];
-    self.downloadManager.maxConcurrentDownloads = 4;
-    
-    // queue the files to be downloaded
-    
-//    for (NSString *urlString in urlStrings)
-//    {
-        NSString *downloadFilename = [downloadFolder stringByAppendingPathComponent:[myURL lastPathComponent]];
-        NSURL *url = [NSURL URLWithString:myURL];
-        
-        [self.downloadManager addDownloadWithFilename:downloadFilename URL:url];
-    //}
-    
-    // I've added a cancel button to my user interface, so now that downloads have started, let's enable that button
-    
-    self.cancelButton.enabled = YES;
-    self.startDate = [NSDate date];
-    
-    [self.downloadManager start];
-}
+//    NSString * myURL = [NSString stringWithFormat:@"%@", jitsInstance.url];
+//    
+//    NSLog(@"Issue URL is:%@", myURL);
+//    
+//    
+//    self.downloadManager = [[DownloadManager alloc] initWithDelegate:self];
+//    self.downloadManager.maxConcurrentDownloads = 4;
+//    
+//    // queue the files to be downloaded
+//    
+//        NSString *downloadFilename = [downloadFolder stringByAppendingPathComponent:[myURL lastPathComponent]];
+//        NSURL *url = [NSURL URLWithString:myURL];
+//        
+//        [self.downloadManager addDownloadWithFilename:downloadFilename URL:url];
+//    
+//    // I've added a cancel button to my user interface, so now that downloads have started, let's enable that button
+//    
+//    self.cancelButton.enabled = YES;
+//    self.startDate = [NSDate date];
+//    
+//    [self.downloadManager start];
+//}
 
 #pragma mark - DownloadManager Delegate Methods
 
@@ -221,7 +168,7 @@
     
     else
     {
-        message = [NSString stringWithFormat:@"%d file(s) downloaded successfully. %d file(s) were not downloaded successfully. The files are located in the app's Documents folder on your device/simulator. (%.1f seconds)", self.downloadSuccessCount, self.downloadErrorCount, elapsed];
+        message = [NSString stringWithFormat:@"%d file(s) downloaded successfully. %d file(s) were not downloaded successfully. (%.1f seconds)", self.downloadSuccessCount, self.downloadErrorCount, elapsed];
     
     [[[UIAlertView alloc] initWithTitle:nil
                                 message:message
@@ -347,7 +294,8 @@
     
     
     
-    [cell.progressView setProgress:0];
+    [progressView setProgress:0];
+    [progressView setHidden:YES];
     
     
     NSString * myURL = [NSString stringWithFormat:@"%@", jitsInstance.url];
@@ -372,15 +320,18 @@
 //    NSString *filePath = myFilePath;
     
     if (!fileExists) {
-        [cell.downloadButton setTitle:@"Download" forState:normal];
-        [cell.progressView setHidden:NO];
+        cell.TapLabel.text = @"Tap to Download";
+        cell.TapLabel.alpha = 1.0;
+        //[progressView setHidden:NO];
         NSLog(@"File does not exist!");
         
     }
     else if (fileExists){
         NSLog(@"File exist!");
-        [cell.downloadButton setTitle:@"Read" forState:normal];
-        [cell.progressView setHidden:YES];
+        cell.TapLabel.text = @"Tap to Read";
+        cell.TapLabel.alpha = 1.0;
+        cell.TapLabel.hidden = NO;
+        //[progressView setHidden:YES];
     }
 
     
@@ -415,9 +366,12 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     //[self queueAndStartDownloads];
     
+    //[progressView setHidden:NO];
+    //self.cancelButton.enabled = YES;
+    
     DownloadCell *cell = (DownloadCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     
-    if ([cell.downloadButton.currentTitle isEqualToString:@"Download"]) {
+    if ([cell.TapLabel.text isEqual: @"Tap to Download"]) {
         
     
     NSString *documentsPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
@@ -442,13 +396,17 @@
     [self.downloadManager addDownloadWithFilename:downloadFilename URL:url];
     
     self.cancelButton.enabled = YES;
+    [progressView setHidden:NO];
     self.startDate = [NSDate date];
+    //cell.TapLabel.hidden = YES;
+    cell.TapLabel.text = @"Downloading...";
+    
     
     [self.downloadManager start];
         
     
     }
-    else if ([cell.downloadButton.currentTitle isEqualToString:@"Read"]){
+    else if ([cell.TapLabel.text isEqual: @"Tap to Read"]){
 //        NSString *message = @"Testing Read tap";
 //        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"Testing"
 //                                                           message:message
@@ -534,7 +492,7 @@
         // if the server was able to tell us the length of the file, then update progress view appropriately
         // to reflect what % of the file has been downloaded
         
-        cell.progressView.progress = (double) download.progressContentLength / (double) download.expectedContentLength;
+        progressView.progress = (double) download.progressContentLength / (double) download.expectedContentLength;
     }
     else
     {
@@ -544,7 +502,7 @@
         //
         // This progress view will just be what % of the current megabyte has been downloaded
         
-        cell.progressView.progress = (double) (download.progressContentLength % 1000000L) / 1000000.0;
+        progressView.progress = (double) (download.progressContentLength % 1000000L) / 1000000.0;
     }
 }
 
@@ -555,10 +513,10 @@
     [self.downloadManager cancelAll];
 }
 
-- (IBAction)downloadButtonTapped:(id)sender
-{
-    [self queueAndStartDownloads];
-}
+//- (IBAction)downloadButtonTapped:(id)sender
+//{
+//    [self queueAndStartDownloads];
+//}
 
 
 

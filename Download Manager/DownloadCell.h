@@ -29,10 +29,11 @@
 
 @property (nonatomic, strong) IBOutlet UILabel *issue;
 @property (nonatomic, strong) IBOutlet UIImageView *coverimage;
-@property (strong, nonatomic) IBOutlet UIButton *downloadButton;
+@property (strong, nonatomic) IBOutlet UILabel *TapLabel;
+//@property (strong, nonatomic) IBOutlet UIButton *downloadButton;
 //- (IBAction)downloadButtonPressed:(id)sender;
 //@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 //@property (weak, nonatomic) IBOutlet UILabel *filenameLabel;
-@property (weak, nonatomic) IBOutlet UIProgressView *progressView;
+//@property (weak, nonatomic) IBOutlet UIProgressView *progressView;
 
 @end

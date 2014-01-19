@@ -28,6 +28,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <toolbar key="tableFooterView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="HUt-yd-vj8">
+                            <rect key="frame" x="0.0" y="170" width="320" height="44"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                            <items>
+                                <barButtonItem title="Item" style="plain" id="kS0-yC-N2j">
+                                    <progressView key="customView" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progressViewStyle="bar" progress="0.5" id="Kna-3b-tYm">
+                                        <rect key="frame" x="16" y="21" width="286" height="3"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="trackTintColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
+                                    </progressView>
+                                </barButtonItem>
+                            </items>
+                        </toolbar>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="DownloadCell" rowHeight="84" id="lJ0-d7-vTF" customClass="DownloadCell">
                                 <rect key="frame" x="0.0" y="86" width="320" height="84"/>
@@ -40,14 +53,6 @@
                                             <rect key="frame" x="6" y="5" width="54" height="70"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
-                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fw9-Rb-Gna">
-                                            <rect key="frame" x="231" y="2" width="69" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                            <state key="normal" title="Download">
-                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                            </state>
-                                        </button>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Issue" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q3J-NP-CCU">
                                             <rect key="frame" x="79" y="11" width="144" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -55,18 +60,20 @@
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="LwI-p1-t66">
-                                            <rect key="frame" x="85" y="54" width="150" height="2"/>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Tap to Download" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BiG-WY-jPF">
+                                            <rect key="frame" x="79" y="42" width="130" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        </progressView>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
+                                    <outlet property="TapLabel" destination="BiG-WY-jPF" id="omH-SX-e5Q"/>
                                     <outlet property="coverimage" destination="Mnp-Zi-gJy" id="CGq-5O-tWg"/>
-                                    <outlet property="downloadButton" destination="fw9-Rb-Gna" id="dGP-lF-bwP"/>
                                     <outlet property="issue" destination="q3J-NP-CCU" id="aib-Px-eg6"/>
-                                    <outlet property="progressView" destination="LwI-p1-t66" id="5Hz-SW-8ic"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -76,7 +83,7 @@
                             <outlet property="delegate" destination="12" id="15"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Download Manager" id="36">
+                    <navigationItem key="navigationItem" title="The Journal of ITS" id="36">
                         <barButtonItem key="rightBarButtonItem" systemItem="cancel" id="r8F-aH-fhg">
                             <connections>
                                 <action selector="tappedCancelButton:" destination="12" id="8r6-uK-azJ"/>
@@ -85,6 +92,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="cancelButton" destination="r8F-aH-fhg" id="JPP-3Y-Af1"/>
+                        <outlet property="progressView" destination="Kna-3b-tYm" id="uAk-k7-LqS"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="17" sceneMemberID="firstResponder"/>
