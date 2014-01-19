@@ -97,38 +97,6 @@
 }
 
 
-//- (void)queueAndStartDownloads
-//{
-//    
-//    NSString *documentsPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
-//    NSString *downloadFolder = [documentsPath stringByAppendingPathComponent:@"downloads"];
-//    
-//    jits * jitsInstance = nil;
-//    
-//    jitsInstance = [jitsArray objectAtIndex:0];
-//    
-//    NSString * myURL = [NSString stringWithFormat:@"%@", jitsInstance.url];
-//    
-//    NSLog(@"Issue URL is:%@", myURL);
-//    
-//    
-//    self.downloadManager = [[DownloadManager alloc] initWithDelegate:self];
-//    self.downloadManager.maxConcurrentDownloads = 4;
-//    
-//    // queue the files to be downloaded
-//    
-//        NSString *downloadFilename = [downloadFolder stringByAppendingPathComponent:[myURL lastPathComponent]];
-//        NSURL *url = [NSURL URLWithString:myURL];
-//        
-//        [self.downloadManager addDownloadWithFilename:downloadFilename URL:url];
-//    
-//    // I've added a cancel button to my user interface, so now that downloads have started, let's enable that button
-//    
-//    self.cancelButton.enabled = YES;
-//    self.startDate = [NSDate date];
-//    
-//    [self.downloadManager start];
-//}
 
 #pragma mark - DownloadManager Delegate Methods
 
@@ -138,44 +106,27 @@
 
 - (void)didFinishLoadingAllForManager:(DownloadManager *)downloadManager
 {
-    NSString *message;
-    
-    NSTimeInterval elapsed = [[NSDate date] timeIntervalSinceDate:self.startDate];
-    
+//    NSString *message;
+//    
+//    NSTimeInterval elapsed = [[NSDate date] timeIntervalSinceDate:self.startDate];
+//    
     self.cancelButton.enabled = NO;
-    
-    if (self.downloadErrorCount == 0)
-    {
-        message = [NSString stringWithFormat:@"%d file(s) downloaded successfully. The files are located in the app's Documents folder on your device/simulator. (%.1f seconds)", self.downloadSuccessCount, elapsed];
-    //////
-//        NSFileManager *fileManager = [NSFileManager defaultManager];
-//        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-//        NSArray *pdfs = [[NSBundle bundleWithPath:[paths objectAtIndex:0]] pathsForResourcesOfType:@"pdf" inDirectory:@"downloads"];
-//        NSString *filePath = [pdfs lastObject];
-//        
-//        if ([fileManager fileExistsAtPath:filePath]) {
-//            NSLog(@"No error - File path is: %@",filePath);
-//        }
-//        else{
-//            NSLog(@"Error - File path is: %@", filePath);
-//            
-//        }
-
-        /////
-        
-    
-    }
-    
-    else
-    {
-        message = [NSString stringWithFormat:@"%d file(s) downloaded successfully. %d file(s) were not downloaded successfully. (%.1f seconds)", self.downloadSuccessCount, self.downloadErrorCount, elapsed];
-    
-    [[[UIAlertView alloc] initWithTitle:nil
-                                message:message
-                               delegate:nil
-                      cancelButtonTitle:@"OK"
-                      otherButtonTitles:nil] show];
-    }
+//    
+//    if (self.downloadErrorCount == 0)
+//    {
+//        message = [NSString stringWithFormat:@"%d file(s) downloaded successfully. The files are located in the app's Documents folder on your device/simulator. (%.1f seconds)", self.downloadSuccessCount, elapsed];
+//    }
+//    
+//    else
+//    {
+//        message = [NSString stringWithFormat:@"%d file(s) downloaded successfully. %d file(s) were not downloaded successfully. (%.1f seconds)", self.downloadSuccessCount, self.downloadErrorCount, elapsed];
+//    
+//    [[[UIAlertView alloc] initWithTitle:nil
+//                                message:message
+//                               delegate:nil
+//                      cancelButtonTitle:@"OK"
+//                      otherButtonTitles:nil] show];
+//    }
 }
 
 // optional method to indicate that individual download completed successfully
@@ -210,17 +161,6 @@
 
 - (void)downloadManager:(DownloadManager *)downloadManager downloadDidReceiveData:(Download *)download;
 {
-    //for (NSInteger row = [downloadManager.downloads objectAtIndex:0]; row < [downloadManager.downloads count]; row++)
-    //{
-        //if (download == [downloadManager.downloads objectAtIndex:0])
-        //{
-            //[self updateProgressViewForIndexPath:[NSIndexPath indexPathForRow:[downloadManager.downloads objectAtIndex:0] inSection:0] download:download];
-            //break;
-        //}
-        
-        //[downloadManager.downloads removeObjectAtIndex:0];
-    //}
-////////////////////////////////////////
     
     for (NSInteger row = 0; row < [downloadManager.downloads count]; row++)
         
@@ -249,17 +189,14 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    //return [self.downloadManager.downloads count];
+    
     return[jitsArray count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    static NSString *CellIdentifier = @"DownloadCell";
-//    DownloadCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
     static NSString *CellIdentifier = @"DownloadCell";
-    //UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
     DownloadCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
@@ -274,12 +211,7 @@
     
     jitsInstance = [jitsArray objectAtIndex:indexPath.row];
     
-    
-    //Download *download = self.downloadManager.downloads[indexPath.row];
-    
-    // the name of the file
-    
-    cell.issue.text = jitsInstance.issue;//[download.filename lastPathComponent];
+    cell.issue.text = jitsInstance.issue;
     
     NSString * myCoverURL = [NSString stringWithFormat:@"%@", jitsInstance.coverimage];
     
@@ -287,12 +219,8 @@
                         [NSData dataWithContentsOfURL:
                          [NSURL URLWithString: myCoverURL]]];
     
-    //NSLog(@"CoverImage URL is:%@", myCoverURL);
-    
     
     cell.coverimage.image = myImage;
-    
-    
     
     [progressView setProgress:0];
     [progressView setHidden:YES];
@@ -310,19 +238,10 @@
     
     NSLog(@"Search file path: %@", foofile);
     
-//    NSFileManager *fileManager = [NSFileManager defaultManager];
-//    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-//    NSString * fileName = [[NSString alloc]initWithFormat:@"%@", [myURL lastPathComponent]];
-//    NSLog(@"filename is: %@", fileName);
-//    NSArray *pdfs = [[NSBundle bundleWithPath:[paths objectAtIndex:0]] pathsForResourcesOfType:fileName inDirectory:@"downloads"];
-//    NSString * myFilePath = [[NSString alloc]initWithFormat:@"%@", pdfs];
-//    NSLog(@"myFilePath is: %@",myFilePath);
-//    NSString *filePath = myFilePath;
-    
     if (!fileExists) {
         cell.TapLabel.text = @"Tap to Download";
         cell.TapLabel.alpha = 1.0;
-        //[progressView setHidden:NO];
+        
         NSLog(@"File does not exist!");
         
     }
@@ -331,43 +250,15 @@
         cell.TapLabel.text = @"Tap to Read";
         cell.TapLabel.alpha = 1.0;
         cell.TapLabel.hidden = NO;
-        //[progressView setHidden:YES];
     }
 
     
-    
-    //if (download.isDownloading)
-    //{
-        // if we're downloading a file turn on the activity indicator
-        
-//        if (!cell.activityIndicator.isAnimating)
-//            [cell.activityIndicator startAnimating];
-//        
-//        cell.activityIndicator.hidden = NO;
-        //cell.progressView.hidden = NO;
-
-        //[self updateProgressViewForIndexPath:indexPath download:download];
-    //}
-    //else
-    //{
-        // if not actively downloading, no spinning activity indicator view nor file download progress view is needed
-        
-//        [cell.activityIndicator stopAnimating];
-//        cell.activityIndicator.hidden = YES;
-        //cell.progressView.hidden = YES;
-    //}
-    
     return cell;
     
-    //[self.tableView reloadData];
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    //[self queueAndStartDownloads];
-    
-    //[progressView setHidden:NO];
-    //self.cancelButton.enabled = YES;
     
     DownloadCell *cell = (DownloadCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     
@@ -383,10 +274,6 @@
     
     NSString * myURL = [NSString stringWithFormat:@"%@", jitsInstance.url];
     
-   // NSLog(@"Issue URL is:%@", myURL);
-    
-    //self.downloadManager = [[DownloadManager alloc] initWithDelegate:self];
-    //self.downloadManager.maxConcurrentDownloads = 4;
     
     NSString *downloadFilename = [downloadFolder stringByAppendingPathComponent:[myURL lastPathComponent]];
     NSURL *url = [NSURL URLWithString:myURL];
@@ -406,14 +293,8 @@
         
     
     }
-    else if ([cell.TapLabel.text isEqual: @"Tap to Read"]){
-//        NSString *message = @"Testing Read tap";
-//        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"Testing"
-//                                                           message:message
-//                                                          delegate:self
-//                                                 cancelButtonTitle:@"Ok"
-//                                                 otherButtonTitles:nil,nil];
-//        [alertView show];
+    else if ([cell.TapLabel.text isEqual: @"Tap to Read"])
+    {
         
         jits * jitsInstance = nil;
         
@@ -427,7 +308,6 @@
         NSString * fileName = [[NSString alloc]initWithFormat:@"%@", [myURL lastPathComponent]];
         
         NSString* foofile = [downloadFolder stringByAppendingPathComponent:fileName];
-        //BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:foofile];
         
         NSString *phrase = nil; // Document password (for unlocking most encrypted PDF files)
         
@@ -479,7 +359,7 @@
 
 - (void)updateProgressViewForIndexPath:(NSIndexPath *)indexPath download:(Download *)download
 {
-    //DownloadCell *cell = (DownloadCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+    
     DownloadCell *cell = (DownloadCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:0]];
     
     // if the cell is not visible, we can return
@@ -512,11 +392,6 @@
 {
     [self.downloadManager cancelAll];
 }
-
-//- (IBAction)downloadButtonTapped:(id)sender
-//{
-//    [self queueAndStartDownloads];
-//}
 
 
 
